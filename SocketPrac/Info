@@ -1,0 +1,46 @@
+Big Endian and Little Endian Method.
+
+1. Big Endian
+  - 주소가 증가하는 방향으로 순서대로 넣는다.
+    1 : 0x12
+    2 : 0x34
+2. Little Endian
+  - 주소가 증가할때 반대방향으로 넣는다.
+    1 : 0x34
+    2 : 0x12
+
+네트워킹에서는 이 문제가 매우 민감하다. 데이터를 어떤 컴퓨터에서 보내느냐에 따라서 다르게 보낼 수 있기 때문이다.
+이를 TCP/IP에서는 Big Endian방식으로 정했는데, 이를 NBO : Network Byte Order라고 한다.
+
+컴퓨터, 즉 호스트의 바이트 순서를 HBO : Host Byte Order라고 하고
+HBO -> NBO로 바꾸는 과정이 보낼때 반드시 필요하다.
+
+
+구조체끼리는 문법적으로 편법이긴하지만, 패딩만 맞추고 적절하게 해석단위로 변수를 배치하면 래핑을 할 수도 있다.
+
+-> 실제로 sys/socket.h와 netinet/in.h사이에 sockaddr구조체와 sockaddr_in구조체 사이에는 내부 구성 변수에 미묘한 차이가 있다.
+    그러나, 인자로 넘길때 형변환만 제대로 해준다면 문제없이 사용이 가능한데, 이유는 다음과 같다.
+
+    struct sockaddr{
+        sa_family_t     sa_family;
+        char            sa_data[14];       // 포트와 IP주소가 섞여있어 대입시 매우 불편할 수 있다.
+    };  -> 16바이트
+
+    struct sockaddr_in{
+        sa_family_t     sin_family;
+        u_short         sin_port;
+        struct in_addr  sin_addr;
+        char            sin_zero[8];
+    };  -> 16바이트
+
+    이를 캐스팅으로 sockaddr_in*을 sockaddr*로 변환해도 AF_INET의 family에서 사용하는 규격은 한정되어있으므로 같은 효과를 낸다.
+
+정리
+1. sys/socket.h에는 소켓프로그래밍을 위한 인터페이스들과 기본 형식 및 메크로가 정의되어있다.
+2. netinet/in.h에는 socketaddr_in등 간단한 wrapper가 정의되어있다.
+3. arpa/inet.h - 인터넷을 위한 도구들이 들어가있다. (htons 같은 함수)
+
+arpa/inet.h
+1. char* inet_ntoa(const struct in_addr in);    // 구조체 IP주소를 멀티바이트형으로 만들어준다.
+2. in_addr_t inet_aton(const char* cp);               // 멀티바이트형 IP주소를 숫자로 바꿔준다.
+
