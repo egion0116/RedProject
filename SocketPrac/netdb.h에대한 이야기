@@ -1,0 +1,13 @@
+netdb.h는 net과 관련된 데이터베이스들 (host파일등..)을 탐색하는데 필요한 기본 API가 수록되어있다.
+
+struct hostent* gethostent(void)
+int sethostent(int stayopen)
+int endhostent(void)
+이 세개의 함수는 host파일 내부 데이터를 탐색하여 원하는 정보를 얻도록 도와준다. 
+(단, 표준에는 읽어내는 방식에 대해 순차탐색인지 랜덤탐색인지 기술하고 있지 않다.
+    -> 많은 경우에, 동작방식은 DNS에 의존하는것으로 간주한다.)
+
+sethostent(int stayopen)의 경우 stayopen이 전달인자가 0이 아닐경우 데이터베이스를 gethostent에 의해 닫히도록 하지 않는다.
+
+hostent구조체를 이용하므로 빈 구조체를 만들어 놓고 사용한다.
+gethostent의 반환형식이 포인터형식이므로..
