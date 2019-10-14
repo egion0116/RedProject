@@ -1,0 +1,26 @@
+1. mysql_init()
+
+정의
+    MYSQL* mysql_init(MYSQL* mysql);
+
+설명
+    mysql_real_connect()에 맞는 MYSQL 개체를 할당하거나 초기화한다. 
+
+    1. 인자에 NULL이 올 경우
+        함수는 할당후 초기화를 진행한뒤 새 객체를 리턴한다.
+    2. 인자에 NULL이 아닌 값이 올 경우
+        할당을 하지않고 해당 인자를 초기화 한 뒤 해당 개체의 주소를 반환하게 된다.
+
+        예)
+        MYSQL* mysql = (MYSQL*)malloc(sizeof(MYSQL));
+        MYSQL* mysql2 = mysql_init(mysql);
+
+        이렇게 되면 mysql과 mysql2는 같은 주소를 가르키게된다. 왜냐하면 mysql_init은 할당된 구역안에 초기화만 한 뒤 그 구역을 그대로 반환했기 때문이다.
+
+        반면
+        MYSQL* mysql = NULL;
+        MYSQL* mysql2 = mysql_init(mysql);
+
+        이렇게되면 mysql2는 왠 뜬금없는 주소를 가르키게 되는데..
+        mysql_init(NULL)을 한것과 다름없게되어 새 공간을 내부에서 할당하고 그 공간을 초기화한 뒤 그 공간의 주소를 반환한것으로 이해할 수 있다.
+    
