@@ -12,4 +12,4 @@ clear:
 ${TARGET} : ${OBJS}
 	gcc -o $@ $^ `mysql_config --libs`
 
-Prac.o : Prac.c
+Prac.o : Prac.c stdfx.h
