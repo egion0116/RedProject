@@ -56,8 +56,6 @@ int main(void)
 
     sprintf(Query, "SELECT * FROM log_data");
 
-    printf("%u\n", mysql_field_count(conn));
-
     // 쿼리를 실행하고
     if (mysql_query(conn, Query))
     {
@@ -67,7 +65,6 @@ int main(void)
     
     // 결과를 불러온다.
     MYSQL_RES* Result = mysql_store_result(conn);
-    unsigned int row_num = 0;
     unsigned int field_num = 0;
     if (Result)
     {
@@ -75,9 +72,18 @@ int main(void)
         
         // Result 구조체에서 필드의 길이를 불러온다.
         field_num = mysql_num_fields(Result);
-        row_num = 
-
-        mysql_free_result(Result);
+        MYSQL_ROW row = NULL;
+        while ((row = mysql_fetch_row(Result)))
+        {
+           unsigned long *lengths;
+           lengths = mysql_fetch_lengths(Result);
+           for(int i = 0; i < field_num; i++)
+           {
+               printf("[%.*s] ", (int) lengths[i],
+                      row[i] ? row[i] : "NULL");
+           }
+           printf("\n");
+        }
     }
     else    // 결과가 없었다면..
     {
@@ -89,12 +95,11 @@ int main(void)
         }
         else
         {
-            row_num = (unsigned int)mysql_affected_rows(conn);
-            printf("%affected row : ld\n", row_num);
+            unsigned int row_num = mysql_affected_rows(conn);
+            printf("affected row : %d\n", row_num);
         }
     }
     
-
     mysql_close(conn);
 
     return 0;
