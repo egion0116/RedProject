@@ -52,5 +52,4 @@ Mkfile.old
 dkms.conf
 
 # Visual Studio Code Profile
-.vscode/*
-MySQLPrac/.vscode/*
+.vscode
