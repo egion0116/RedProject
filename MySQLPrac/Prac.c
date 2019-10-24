@@ -64,7 +64,7 @@ int main(void)
         // Error Handle
         Mysql_Error_Handle(conn);
     }
-
+    
     // 결과를 불러온다.
     MYSQL_RES* Result = mysql_store_result(conn);
     unsigned int row_num = 0;

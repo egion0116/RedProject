@@ -68,8 +68,8 @@ void CurrentTime(char* Dest)
 void LoadPositionData(char* p_Data, const int Port_Num)
 {
     LogData Data;
-    char* sz_area = (char*)calloc(sizeof(char), 30);
-    char* sz_name = (char*)calloc(sizeof(char), 30);
+    char* sz_area = (char*)calloc(30, sizeof(char));
+    char* sz_name = (char*)calloc(30, sizeof(char));
 
     strcpy(sz_area, "아산-탕정");
     strcpy(sz_name, "산학관");
