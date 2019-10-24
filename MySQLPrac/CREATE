@@ -1,0 +1,9 @@
+CREATE TABLE log_data (
+    id bigint unsigned NOT NULL AUTO_INCREMENT,
+    time DATETIME,
+    no int,
+    log_area CHAR(30),
+    log_name CHAR(30),
+    floor int,
+    PRIMARY KEY (id)
+);

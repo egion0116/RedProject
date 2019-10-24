@@ -1,0 +1,21 @@
+Prototype
+    MYSQL_ROW mysql_fetch_row(MYSQL_RES* result);
+
+1. 동기화
+    -동기식 함수이므로 비동기 프로그래밍시 비동기 함수인 mysql_fetch_row_nonblocking()함수를 이용하라.
+
+2. 설명
+    mysql_fetch_row함수는 쿼리 결과로부터 한 줄을 가져옵니다.
+
+    Return Value에 대한 고찰
+        기본적으로 MYSQL_ROW형태의 반환값을 가집니다. 이는 mysql.h내에서 typedef char** MYSQL_ROW; 형태로 정의되어있습니다.
+            (1) mysql_store_result()나 mysql_store_result_nonblocking()이후에 오는 mysql_fetch_row()의 결과가 NULL일 경우 더이상 가져올 줄이 없음을 의미합니다.
+            (2) mysql_use_result()의 이후에 오는 mysql_fetch_row()의 결과가 NULL일 경우
+                (2)-1 : 에러가 났으므로 에러를 처리합니다.
+                (2)-2 : 더이상 가져올 줄이 없음을 의미합니다.
+    
+    구문적 분석 : 주로 같이 쓰이는 함수
+        1. unsigned int mysql_num_fields(result) -> row의 길이를 알아내는데 매우 효과적입니다.
+            EX) MYSQL_ROW row = mysql_fetch_row(result); 의 구문의 경우 row의 경계값을 row[mysql_num_fields(result) - 1]; 로 알아낼 수 있습니다.
+        
+        2. unsigned long* mysql_fetch_lengths(result) -> row속 각 필드값들의 길이값을 알아내는데 효과적입니다. NULL과 빈 문자열을 구분하는데 도움을 줍니다.
